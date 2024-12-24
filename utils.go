@@ -1,77 +1,58 @@
-package telegram
+package gravel
 
-import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-)
-
-// GetUpdates fetches updates (messages) from the Telegram bot.
-func (c *Client) GetUpdates() ([]Update, error) {
-	url := fmt.Sprintf("https://api.telegram.org/bot%s/getUpdates?offset=%d", c.Token, c.Offset)
-
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
+func (m *Message) IsCommand() bool {
+	for _, entity := range m.Entities {
+		if entity.Type == "bot_command" {
+			return true
+		}
 	}
-	defer resp.Body.Close()
-
-	var result struct {
-		Ok     bool     `json:"ok"`
-		Result []Update `json:"result"`
-	}
-
-	err = json.NewDecoder(resp.Body).Decode(&result)
-	if err != nil {
-		return nil, err
-	}
-
-	if !result.Ok {
-		return nil, fmt.Errorf("telegram API returned an error")
-	}
-
-	if len(result.Result) > 0 {
-		c.Offset = result.Result[len(result.Result)-1].UpdateID + 1
-	}
-
-	return result.Result, nil
+	return false
 }
 
-func (c *Client) GetUserInfo(chatID int64) (*User, error) {
-	// Construct the URL for the Telegram Bot API
-	url := fmt.Sprintf("https://api.telegram.org/bot%s/getChat?chat_id=%d", c.Token, chatID)
+// NewReplyKeyboard creates a new regular keyboard with sane defaults.
+func NewReplyKeyboard(rows ...[]KeyboardButton) ReplyKeyboardMarkup {
+	var keyboard [][]KeyboardButton
 
-	// Make the HTTP request to get user info
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
+	keyboard = append(keyboard, rows...)
+
+	return ReplyKeyboardMarkup{
+		ResizeKeyboard: true,
+		Keyboard:       keyboard,
 	}
-	defer resp.Body.Close()
+}
 
-	// Define a struct to hold the response
-	var result struct {
-		Ok     bool `json:"ok"`
-		Result Chat `json:"result"`
+// NewKeyboardButtonRow creates a row of keyboard buttons.
+func NewKeyboardButtonRow(buttons ...KeyboardButton) []KeyboardButton {
+	var row []KeyboardButton
+
+	row = append(row, buttons...)
+
+	return row
+}
+
+// NewKeyboardButton creates a regular keyboard button.
+func NewKeyboardButton(text string) KeyboardButton {
+	return KeyboardButton{
+		Text: text,
 	}
+}
 
-	// Decode the JSON response into the result
-	err = json.NewDecoder(resp.Body).Decode(&result)
-	if err != nil {
-		return nil, err
+// NewInlineKeyboardMarkup creates a new inline keyboard.
+func NewInlineKeyboardMarkup(rows ...[]InlineKeyboardButton) InlineKeyboardMarkup {
+	var keyboard [][]InlineKeyboardButton
+
+	keyboard = append(keyboard, rows...)
+
+	return InlineKeyboardMarkup{
+		InlineKeyboard: keyboard,
 	}
+}
 
-	// Check if the response was successful
-	if !result.Ok {
-		return nil, fmt.Errorf("telegram API returned an error")
+// NewInlineKeyboardButtonData creates an inline keyboard button with text
+// and data for a callback.
+func NewInlineKeyboardButtonData(text, data string) InlineKeyboardButton {
+	return InlineKeyboardButton{
+		Text:         text,
+		CallbackData: &data,
 	}
-
-	// Convert the chat info into user info (You can adjust fields as needed)
-	user := &User{
-		ID:        result.Result.ID,
-		FirstName: result.Result.FirstName,
-		LastName:  result.Result.LastName,
-		UserName:  result.Result.UserName,
-	}
-
-	return user, nil
 }
