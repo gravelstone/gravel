@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -74,8 +72,6 @@ func (c *Gravel) makeRequest(url string, payload map[string]interface{}) error {
 
 	// Log the response for debugging
 	if resp.StatusCode != http.StatusOK {
-		respBody, _ := ioutil.ReadAll(resp.Body)
-		log.Printf("Error response body: %s", respBody)
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
