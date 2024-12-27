@@ -27,4 +27,4 @@ jobs:
           mv /tmp/golangci-lint-1.52.0-linux-amd64/golangci-lint /usr/local/bin/
 
       - name: Run golangci-lint
-        run: golangci-lint run --config .golangci.yml
+        run: golangci-lint run
