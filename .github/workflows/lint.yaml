@@ -19,6 +19,11 @@ jobs:
         with:
           go-version: 1.20
 
+      - name: Debug Go Installation
+        run: |
+          go version
+          go env
+
       - name: Install dependencies
         run: go mod tidy
 
