@@ -1,43 +1,30 @@
 name: Lint
 on:
-  pull_request:
+  push:
     branches:
       - main
-  push:
+  pull_request:
     branches:
       - main
 
 jobs:
   lint:
+    name: Lint with golangci-lint
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Go 1.20
-        uses: actions/setup-go@v4
+      - name: Set up Go
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.20
-          cache: "false"
-
-      - name: Debug Go Installation
-        run: |
-          go version
-          go env
-
-      - name: Verify Go Binary in PATH
-        run: |
-          which go
-          echo $GOPATH
-          echo $GOROOT
-
-      - name: Install dependencies
-        run: go mod tidy
+          go-version: '1.19'
 
       - name: Install golangci-lint
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $HOME/bin
-          echo "$HOME/bin" >> $GITHUB_PATH
+          curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v1.52.0/golangci-lint-1.52.0-linux-amd64.tar.gz | tar -xz -C /tmp
+          mv /tmp/golangci-lint-1.52.0-linux-amd64/golangci-lint /usr/local/bin/
 
       - name: Run golangci-lint
-        run: golangci-lint run
+        run: golangci-lint run --config .golangci.yml

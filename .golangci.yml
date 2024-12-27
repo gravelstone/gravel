@@ -1,0 +1,14 @@
+linters:
+  enable:
+    - gocritic
+    - govet
+    - errcheck
+    - unused
+    - stylecheck
+    - typecheck
+    - gocyclo
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      text: "Error return value is not checked"
