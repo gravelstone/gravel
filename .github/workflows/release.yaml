@@ -1,4 +1,4 @@
-name: Go CI
+name: Release
 
 on:
   push:
@@ -31,3 +31,9 @@ jobs:
 
       - name: Run golangci-lint
         run: golangci-lint run
+
+      - name: Install gitlint
+        run: pip install gitlint
+
+      - name: Run gitlint
+        run: gitlint
