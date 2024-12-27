@@ -37,9 +37,10 @@ jobs:
       - name: Install dependencies
         run: go mod tidy
 
-      # Step 5: Run golangci-lint
-      - name: Run golangci-lint
+      - name: Install GolangCI-Lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.54.2  # Use the latest version
-          args: --timeout=5m ./...
+          version: v1.54.2
+
+      - name: Run golangci-lint
+        run: golangci-lint run ./... --timeout=5m
