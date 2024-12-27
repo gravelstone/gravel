@@ -21,15 +21,8 @@ jobs:
         with:
           go-version: '1.21.1'
 
-      - name: Verify Go Environment
-        run: |
-          go version
-          go env
-
-      - name: Install golangci-lint
-        run: |
-          curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v1.52.0/golangci-lint-1.52.0-linux-amd64.tar.gz | tar -xz -C /tmp
-          mv /tmp/golangci-lint-1.52.0-linux-amd64/golangci-lint /usr/local/bin/
-
-      - name: Run golangci-lint
-        run: golangci-lint run --config .golangci.yml
+      - name: Install and Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.52.0
+          args: --config .golangci.yml
