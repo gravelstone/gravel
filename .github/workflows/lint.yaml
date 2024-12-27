@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Build, Lint, and Test
+    name: Linting...
     runs-on: ubuntu-latest
 
     steps:
@@ -25,10 +25,9 @@ jobs:
       - name: Install dependencies
         run: go mod tidy
 
-      - name: Install GolangCI-Lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.54.2
+      - name: Install golangci-lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.42.1
 
       - name: Run golangci-lint
         run: golangci-lint run
