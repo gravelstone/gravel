@@ -27,11 +27,9 @@ jobs:
           go env
 
       - name: Install golangci-lint
-        env:
-          GOLANGCI_LINT_VERSION: v1.52.0
         run: |
-          curl -sSfL https://github.com/golangci/golangci-lint/releases/download/${GOLANGCI_LINT_VERSION}/golangci-lint-${GOLANGCI_LINT_VERSION}-linux-amd64.tar.gz | tar -xz -C /tmp
-          sudo mv /tmp/golangci-lint-${GOLANGCI_LINT_VERSION}-linux-amd64/golangci-lint /usr/local/bin/
+          curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v1.52.0/golangci-lint-1.52.0-linux-amd64.tar.gz | tar -xz -C /tmp
+          mv /tmp/golangci-lint-1.52.0-linux-amd64/golangci-lint /usr/local/bin/
 
       - name: Run golangci-lint
         run: golangci-lint run --config .golangci.yml
