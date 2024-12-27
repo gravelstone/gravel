@@ -14,15 +14,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Go
+      - name: Set up Go 1.20
         uses: actions/setup-go@v4
         with:
           go-version: 1.20
+          cache: "false"
 
       - name: Debug Go Installation
         run: |
           go version
           go env
+
+      - name: Verify Go Binary in PATH
+        run: |
+          which go
+          echo $GOPATH
+          echo $GOROOT
 
       - name: Install dependencies
         run: go mod tidy
