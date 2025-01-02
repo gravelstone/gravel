@@ -10,6 +10,18 @@ import (
 	"github.com/gravelstone/gravel/logger"
 )
 
+// SendMessageToChannel sends a message to a Telegram channel.
+func (c *Gravel) SendMessageToChannel(channelID string, text string) error {
+	url := fmt.Sprintf("%s/sendMessage", c.BaseURL)
+
+	payload := map[string]interface{}{
+		"chat_id": channelID,
+		"text":    text,
+	}
+
+	return c.makeRequest(url, payload)
+}
+
 // Client represents the Telegram bot client.
 func NewInlineKeyboardRow(buttons ...InlineKeyboardButton) []InlineKeyboardButton {
 	var row []InlineKeyboardButton
